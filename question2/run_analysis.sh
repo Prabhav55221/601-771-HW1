@@ -8,7 +8,7 @@
 #SBATCH --nodes=1
 #SBATCH --mem-per-cpu=16GB
 #SBATCH --gpus=1
-#SBATCH --partition=gpu
+#SBATCH --partition=gpu-a100
 #SBATCH --account=a100acct
 #SBATCH --mail-user="psingh54@jhu.edu"
 

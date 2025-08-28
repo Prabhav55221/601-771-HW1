@@ -61,3 +61,5 @@ results/*.csv
 
 # Conda
 .conda/
+
+*.out
