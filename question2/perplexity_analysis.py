@@ -20,22 +20,36 @@ def compute_perplexity(text, model, tokenizer):
     input_ids = inputs["input_ids"]
     seq_len = input_ids.size(1)
     
+    max_length = model.config.n_positions  # 1024 for DistilGPT2
+    stride = 512
+    
     nlls = []
+    prev_end_loc = 0
+    
     with torch.no_grad():
-        for i in range(seq_len):
-            begin_loc = max(i + 1 - 512, 0)  # context window
-            end_loc = min(i + 1, seq_len)
-            trg_len = end_loc - i  # may be different from 1 if i is close to end
+        for begin_loc in range(0, seq_len, stride):
+            end_loc = min(begin_loc + max_length, seq_len)
+            trg_len = end_loc - prev_end_loc  # only score new tokens
             
             input_ids_slice = input_ids[:, begin_loc:end_loc]
             target_ids = input_ids_slice.clone()
             target_ids[:, :-trg_len] = -100
             
             outputs = model(input_ids_slice, labels=target_ids)
-            neg_log_likelihood = outputs.loss * trg_len
-            nlls.append(neg_log_likelihood)
+            
+            # Skip if loss is None or NaN
+            if outputs.loss is not None and not torch.isnan(outputs.loss):
+                neg_log_likelihood = outputs.loss * trg_len
+                nlls.append(neg_log_likelihood)
+            
+            prev_end_loc = end_loc
+            if end_loc == seq_len:
+                break
     
-    ppl = torch.exp(torch.stack(nlls).mean())
+    if len(nlls) == 0:
+        return float('inf')
+    
+    ppl = torch.exp(torch.stack(nlls).sum() / (seq_len - 1))
     return ppl.item()
 
 def shuffle_paragraph(text):

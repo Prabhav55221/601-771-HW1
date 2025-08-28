@@ -62,4 +62,8 @@ results/*.csv
 # Conda
 .conda/
 
+# Slurm
 *.out
+
+# Claude
+CLAUDE.md
