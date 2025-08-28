@@ -2,6 +2,7 @@ import torch
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import numpy as np
 import random
+import os
 
 def load_model():
     model_name = "distilgpt2"
@@ -46,6 +47,7 @@ def run_perplexity_analysis():
     original_perplexity = compute_perplexity(original_text, model, tokenizer)
     shuffled_perplexity = compute_perplexity(shuffled_text, model, tokenizer)
     
+    os.makedirs('results', exist_ok=True)
     with open('results/perplexity_results.txt', 'w') as f:
         f.write("PERPLEXITY ANALYSIS\n")
         f.write("==================\n\n")

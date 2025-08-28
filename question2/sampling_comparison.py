@@ -1,5 +1,6 @@
 import torch
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
+import os
 
 def load_model():
     model_name = "distilgpt2"
@@ -40,6 +41,7 @@ def run_sampling_comparison():
     
     temperatures = [0.3, 0.6, 0.9, 1.2, 1.5]
     
+    os.makedirs('results', exist_ok=True)
     with open('results/sampling_results.txt', 'w') as f:
         f.write("SAMPLING COMPARISON\n")
         f.write("===================\n\n")
