@@ -42,7 +42,7 @@ def run_sampling_comparison():
     temperatures = [0.3, 0.6, 0.9, 1.2, 1.5]
     
     os.makedirs('results', exist_ok=True)
-    with open('results/sampling_results.txt', 'w') as f:
+    with open('results/sampling_results.txt', 'w+') as f:
         f.write("SAMPLING COMPARISON\n")
         f.write("===================\n\n")
         f.write(f"Prompt: '{prompt}'\n")

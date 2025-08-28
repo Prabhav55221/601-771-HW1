@@ -18,13 +18,25 @@ def load_model():
 def compute_perplexity(text, model, tokenizer):
     inputs = tokenizer(text, return_tensors="pt")
     input_ids = inputs["input_ids"]
+    seq_len = input_ids.size(1)
     
+    nlls = []
     with torch.no_grad():
-        outputs = model(input_ids, labels=input_ids)
-        loss = outputs.loss
-        perplexity = torch.exp(loss)
+        for i in range(seq_len):
+            begin_loc = max(i + 1 - 512, 0)  # context window
+            end_loc = min(i + 1, seq_len)
+            trg_len = end_loc - i  # may be different from 1 if i is close to end
+            
+            input_ids_slice = input_ids[:, begin_loc:end_loc]
+            target_ids = input_ids_slice.clone()
+            target_ids[:, :-trg_len] = -100
+            
+            outputs = model(input_ids_slice, labels=target_ids)
+            neg_log_likelihood = outputs.loss * trg_len
+            nlls.append(neg_log_likelihood)
     
-    return perplexity.item()
+    ppl = torch.exp(torch.stack(nlls).mean())
+    return ppl.item()
 
 def shuffle_paragraph(text):
     sentences = text.strip().split('. ')
@@ -48,7 +60,7 @@ def run_perplexity_analysis():
     shuffled_perplexity = compute_perplexity(shuffled_text, model, tokenizer)
     
     os.makedirs('results', exist_ok=True)
-    with open('results/perplexity_results.txt', 'w') as f:
+    with open('results/perplexity_results.txt', 'w+') as f:
         f.write("PERPLEXITY ANALYSIS\n")
         f.write("==================\n\n")
         f.write("Original paragraph:\n")
