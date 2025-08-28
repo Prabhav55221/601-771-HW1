@@ -22,7 +22,9 @@ def plot_complexity_trends(results_df):
                  'Wall Clock Time', axes[2])
     
     plt.tight_layout()
-    plt.show()
+    plt.savefig('attention_complexity_trends.png', dpi=300, bbox_inches='tight')
+    plt.savefig('attention_complexity_trends.pdf', bbox_inches='tight')
+    plt.close()
 
 
 def _plot_metric(df, y_col, error_col, x_label, y_label, title, ax):
@@ -86,4 +88,8 @@ def plot_scaling_analysis(results_df):
         ax.set_yscale('log')
         ax.grid(True, alpha=0.3)
         ax.legend()
-        plt.show()
+        
+        filename = title.lower().replace(' ', '_')
+        plt.savefig(f'{filename}_scaling.png', dpi=300, bbox_inches='tight')
+        plt.savefig(f'{filename}_scaling.pdf', bbox_inches='tight')
+        plt.close()
