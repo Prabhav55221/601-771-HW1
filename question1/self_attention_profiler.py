@@ -51,15 +51,20 @@ class SelfAttentionProfiler:
             peak_memory_bytes = torch.cuda.max_memory_allocated()
             peak_memory_mb = peak_memory_bytes / (1024 * 1024)
         else:
-            process = psutil.Process(os.getpid())
-            initial_memory = process.memory_info().rss
+            # For CPU, estimate memory based on tensor sizes
+            batch_size, seq_len, d_model = input_tensor.shape
             
-            with torch.no_grad():
-                _ = model(input_tensor)
-                
-            final_memory = process.memory_info().rss
-            peak_memory_mb = (final_memory - initial_memory) / (1024 * 1024)
-            peak_memory_mb = max(peak_memory_mb, 0)
+            # Estimate memory usage: input + Q,K,V + attention matrix + output
+            input_mem = input_tensor.numel() * 4  # float32 = 4 bytes
+            qkv_mem = 3 * input_mem  # Q, K, V tensors
+            attention_mem = batch_size * seq_len * seq_len * 4  # attention weights
+            
+            if hasattr(model, 'num_heads'):
+                # Multi-head: attention computed per head
+                attention_mem = batch_size * model.num_heads * seq_len * seq_len * 4
+            
+            total_mem_bytes = input_mem + qkv_mem + attention_mem
+            peak_memory_mb = total_mem_bytes / (1024 * 1024)
         
         def forward_pass():
             with torch.no_grad():

@@ -7,6 +7,10 @@ import numpy as np
 def plot_complexity_trends(results_df):
     """Plot FLOPS, memory usage, and timing trends with error bars"""
     
+    # Get device suffix for filename
+    devices = results_df['device'].unique()
+    device_suffix = '_'.join(sorted(devices))
+    
     fig, axes = plt.subplots(1, 3, figsize=(18, 6))
     
     _plot_metric(results_df, 'flops_mean', 'flops_std_error', 
@@ -22,7 +26,7 @@ def plot_complexity_trends(results_df):
                  'Wall Clock Time', axes[2])
     
     plt.tight_layout()
-    plt.savefig('results/attention_complexity_trends.png', dpi=300, bbox_inches='tight')
+    plt.savefig(f'results/attention_complexity_trends_{device_suffix}.png', dpi=300, bbox_inches='tight')
     plt.close()
 
 
@@ -52,6 +56,10 @@ def _plot_metric(df, y_col, error_col, x_label, y_label, title, ax):
 
 def plot_scaling_analysis(results_df):
     """Create separate detailed plots for scaling analysis"""
+    # Get device suffix for filename
+    devices = results_df['device'].unique()
+    device_suffix = '_'.join(sorted(devices))
+    
     metrics = [
         ('flops_mean', 'flops_std_error', 'FLOPs', 'Computational Complexity'),
         ('memory_mean', 'memory_std_error', 'Memory Usage (MB)', 'Memory Usage'),
@@ -89,5 +97,5 @@ def plot_scaling_analysis(results_df):
         ax.legend()
         
         filename = title.lower().replace(' ', '_')
-        plt.savefig(f'results/{filename}_scaling.png', dpi=300, bbox_inches='tight')
+        plt.savefig(f'results/{filename}_scaling_{device_suffix}.png', dpi=300, bbox_inches='tight')
         plt.close()
