@@ -14,6 +14,5 @@ source /home/psingh54/.bashrc
 
 conda activate nlp-hw1
 
-cd /Users/prabhavsingh/Documents/CLASSES/Fall2025/601.771-HW1/question1
 cp config_cpu.py config.py
 python self_attention_profiler.py

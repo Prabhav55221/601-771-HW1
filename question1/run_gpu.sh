@@ -17,6 +17,5 @@ module load cuda/12.1
 
 conda activate nlp-hw1
 
-cd /Users/prabhavsingh/Documents/CLASSES/Fall2025/601.771-HW1/question1
 cp config_gpu.py config.py
 python self_attention_profiler.py
