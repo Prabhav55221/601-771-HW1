@@ -163,10 +163,14 @@ class StrategyQATrainer:
         
         test_results = trainer.evaluate(eval_dataset=self.dataset["test"])
         
+        train_logs = [log for log in trainer.state.log_history if "train_loss" in log]
+        eval_logs = [log for log in trainer.state.log_history if "eval_accuracy" in log]
+        
         training_history = {
-            "train_accuracy": [log["train_accuracy"] for log in trainer.state.log_history if "train_accuracy" in log],
-            "eval_accuracy": [log["eval_accuracy"] for log in trainer.state.log_history if "eval_accuracy" in log],
-            "test_accuracy": test_results["eval_accuracy"]
+            "train_loss": [log["train_loss"] for log in train_logs],
+            "eval_accuracy": [log["eval_accuracy"] for log in eval_logs],
+            "test_accuracy": test_results["eval_accuracy"],
+            "best_eval_accuracy": max([log["eval_accuracy"] for log in eval_logs]) if eval_logs else 0
         }
         
         return training_history
@@ -200,6 +204,7 @@ class StrategyQATrainer:
         
         epochs = range(1, len(head_history["eval_accuracy"]) + 1)
         
+        # Validation accuracy plot
         ax1.plot(epochs, head_history["eval_accuracy"], 'b-', label='Head-Only Validation')
         ax1.plot(epochs, lora_history["eval_accuracy"], 'r-', label='LoRA Validation')
         ax1.set_xlabel('Epoch')
@@ -208,12 +213,14 @@ class StrategyQATrainer:
         ax1.legend()
         ax1.grid(True, alpha=0.3)
         
-        if head_history["train_accuracy"] and lora_history["train_accuracy"]:
-            ax2.plot(epochs, head_history["train_accuracy"], 'b--', label='Head-Only Training')
-            ax2.plot(epochs, lora_history["train_accuracy"], 'r--', label='LoRA Training')
+        # Training loss plot (since we don't have train accuracy)
+        if head_history["train_loss"] and lora_history["train_loss"]:
+            train_epochs = range(1, len(head_history["train_loss"]) + 1)
+            ax2.plot(train_epochs, head_history["train_loss"], 'b--', label='Head-Only Training Loss')
+            ax2.plot(train_epochs, lora_history["train_loss"], 'r--', label='LoRA Training Loss')
             ax2.set_xlabel('Epoch')
-            ax2.set_ylabel('Accuracy')
-            ax2.set_title('Training Accuracy')
+            ax2.set_ylabel('Loss')
+            ax2.set_title('Training Loss')
             ax2.legend()
             ax2.grid(True, alpha=0.3)
         
@@ -227,12 +234,12 @@ class StrategyQATrainer:
         results = {
             "Head-Only": {
                 "test_accuracy": head_history["test_accuracy"],
-                "validation_accuracy": max(head_history["eval_accuracy"]),
+                "validation_accuracy": head_history["best_eval_accuracy"],
                 "trainable_parameters": head_params
             },
             "LoRA": {
                 "test_accuracy": lora_history["test_accuracy"],
-                "validation_accuracy": max(lora_history["eval_accuracy"]),
+                "validation_accuracy": lora_history["best_eval_accuracy"],
                 "trainable_parameters": lora_params
             }
         }
