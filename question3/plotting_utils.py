@@ -62,21 +62,23 @@ def save_weight_decay_comparison_plot(func, trajectories_no_decay: Dict[float, L
                                     trajectories_with_decay: Dict[float, List[tuple]],
                                     config: Config, filename: str):
     """Save plot comparing with and without weight decay."""
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=config.figure_size)
+    fig, axes = plt.subplots(2, 2, figsize=(12, 12))
     
-    create_contour_plot(func, config, ax1, 'Without Weight Decay')
-    create_contour_plot(func, config, ax2, 'With Weight Decay (0.1)')
+    momentum_values = [0.0, 0.9]
+    colors = ['red', 'orange']
     
-    colors = ['red', 'blue', 'green', 'orange']
+    for i, momentum in enumerate(momentum_values):
+        create_contour_plot(func, config, axes[0, i], f'Momentum = {momentum} (No Weight Decay)')
+        plot_trajectory(axes[0, i], trajectories_no_decay[momentum], 
+                       f'momentum={momentum}', colors[i])
+        axes[0, i].legend()
+        
+        create_contour_plot(func, config, axes[1, i], f'Momentum = {momentum} (Weight Decay = 0.1)')
+        plot_trajectory(axes[1, i], trajectories_with_decay[momentum], 
+                       f'momentum={momentum}', colors[i])
+        axes[1, i].legend()
     
-    for i, (momentum, trajectory) in enumerate(trajectories_no_decay.items()):
-        plot_trajectory(ax1, trajectory, f'momentum={momentum}', colors[i])
-    
-    for i, (momentum, trajectory) in enumerate(trajectories_with_decay.items()):
-        plot_trajectory(ax2, trajectory, f'momentum={momentum}', colors[i])
-    
-    ax1.legend()
-    ax2.legend()
+    plt.suptitle(f'Weight Decay Comparison - {func.get_name()}', fontsize=16)
     plt.tight_layout()
     plt.savefig(f'results/{filename}', dpi=300, bbox_inches='tight')
     plt.close()
