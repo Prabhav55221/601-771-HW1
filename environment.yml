@@ -19,3 +19,5 @@ dependencies:
     - torchprofile
     - fvcore
     - transformers
+    - peft
+    - datasets
