@@ -27,14 +27,18 @@ class StrategyQATrainer:
         
     def load_and_preprocess_data(self):
         """Load and preprocess StrategyQA dataset."""
-        try:
-            dataset = load_dataset(self.config.dataset_name, trust_remote_code=True)
-        except RuntimeError:
-            dataset = load_dataset("json", data_files={
-                "train": "hf://datasets/wics/strategy-qa/train.jsonl",
-                "validation": "hf://datasets/wics/strategy-qa/dev.jsonl", 
-                "test": "hf://datasets/wics/strategy-qa/test.jsonl"
-            })
+        dataset = load_dataset("wics/strategy-qa")
+        
+        full_dataset = dataset["test"]
+        
+        train_test_split = full_dataset.train_test_split(test_size=0.3, seed=self.config.random_seed)
+        val_test_split = train_test_split["test"].train_test_split(test_size=0.5, seed=self.config.random_seed)
+        
+        dataset_splits = {
+            "train": train_test_split["train"],
+            "validation": val_test_split["train"], 
+            "test": val_test_split["test"]
+        }
         
         def preprocess_function(examples):
             return self.tokenizer(
@@ -48,10 +52,11 @@ class StrategyQATrainer:
             examples["labels"] = [1 if answer else 0 for answer in examples["answer"]]
             return examples
         
-        dataset = dataset.map(extract_labels, batched=True)
-        dataset = dataset.map(preprocess_function, batched=True)
+        for split_name in dataset_splits:
+            dataset_splits[split_name] = dataset_splits[split_name].map(extract_labels, batched=True)
+            dataset_splits[split_name] = dataset_splits[split_name].map(preprocess_function, batched=True)
         
-        return dataset
+        return dataset_splits
     
     def create_base_model(self):
         """Create base ModernBERT model for classification."""
