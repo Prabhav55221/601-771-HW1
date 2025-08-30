@@ -167,30 +167,25 @@ class StrategyQATrainer:
             compute_metrics=self.compute_metrics
         )
         
-        class TrainingAccuracyCallback(TrainerCallback):
-            def __init__(self, trainer_instance, dataset):
-                self.train_accuracies = []
-                self.trainer_instance = trainer_instance
-                self.dataset = dataset
-                
-            def on_evaluate(self, args, state, control, model=None, **kwargs):
-                # This runs right after validation evaluation
-                train_results = self.trainer_instance.evaluate(eval_dataset=self.dataset["train"])
-                self.train_accuracies.append(train_results["eval_accuracy"])
-        
-        callback = TrainingAccuracyCallback(trainer, self.dataset)
-        trainer.add_callback(callback)
         trainer.train()
+        
+        # Get validation accuracies from logs
+        eval_logs = [log for log in trainer.state.log_history if "eval_accuracy" in log]
+        eval_accuracies = [log["eval_accuracy"] for log in eval_logs]
+        
+        # Compute training accuracy for each epoch
+        train_accuracies = []
+        for epoch in range(len(eval_accuracies)):
+            train_results = trainer.evaluate(eval_dataset=self.dataset["train"])
+            train_accuracies.append(train_results["eval_accuracy"])
         
         test_results = trainer.evaluate(eval_dataset=self.dataset["test"])
         
-        eval_logs = [log for log in trainer.state.log_history if "eval_accuracy" in log]
-        
         training_history = {
-            "train_accuracy": callback.train_accuracies,
-            "eval_accuracy": [log["eval_accuracy"] for log in eval_logs],
+            "train_accuracy": train_accuracies,
+            "eval_accuracy": eval_accuracies,
             "test_accuracy": test_results["eval_accuracy"],
-            "best_eval_accuracy": max([log["eval_accuracy"] for log in eval_logs]) if eval_logs else 0
+            "best_eval_accuracy": max(eval_accuracies) if eval_accuracies else 0
         }
         
         return training_history
