@@ -1,0 +1,15 @@
+PERPLEXITY ANALYSIS
+==================
+
+Original paragraph:
+In July 1969, the Apollo 11 mission carried the first humans to the surface of the Moon. Neil Armstrong and Buzz Aldrin stepped onto the lunar soil while Michael Collins orbited above in the command module. Their achievement was watched by millions around the world and marked a new era of space exploration. The words ‘That’s one small step for man, one giant leap for mankind’ became etched in history.
+
+Original perplexity: 27.63
+
+Shuffled paragraph:
+Their achievement was watched by millions around the world and marked a new era of space exploration. Neil Armstrong and Buzz Aldrin stepped onto the lunar soil while Michael Collins orbited above in the command module. The words ‘That’s one small step for man, one giant leap for mankind’ became etched in history. In July 1969, the Apollo 11 mission carried the first humans to the surface of the Moon.
+
+Shuffled perplexity: 31.55
+
+Difference: 3.92
+Ratio (shuffled/original): 1.14
