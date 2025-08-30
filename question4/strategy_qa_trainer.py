@@ -5,7 +5,7 @@ from datasets import load_dataset
 from transformers import (
     AutoTokenizer, AutoModelForSequenceClassification,
     TrainingArguments, Trainer, DataCollatorWithPadding,
-    set_seed
+    TrainerCallback, set_seed
 )
 from peft import get_peft_model, LoraConfig, TaskType
 import os
@@ -160,15 +160,17 @@ class StrategyQATrainer:
             compute_metrics=self.compute_metrics
         )
         
-        class TrainingCallback:
-            def __init__(self):
+        class TrainingAccuracyCallback(TrainerCallback):
+            def __init__(self, trainer_instance, dataset):
                 self.train_accuracies = []
+                self.trainer_instance = trainer_instance
+                self.dataset = dataset
                 
             def on_epoch_end(self, args, state, control, model=None, **kwargs):
-                train_results = trainer.evaluate(eval_dataset=self.dataset["train"])
+                train_results = self.trainer_instance.evaluate(eval_dataset=self.dataset["train"])
                 self.train_accuracies.append(train_results["eval_accuracy"])
         
-        callback = TrainingCallback()
+        callback = TrainingAccuracyCallback(trainer, self.dataset)
         trainer.add_callback(callback)
         trainer.train()
         
