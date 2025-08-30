@@ -146,7 +146,8 @@ class StrategyQATrainer:
             load_best_model_at_end=True,
             metric_for_best_model="accuracy",
             run_name=run_name,
-            seed=self.config.random_seed
+            seed=self.config.random_seed,
+            eval_on_start=True
         )
         
         trainer = Trainer(
@@ -159,15 +160,24 @@ class StrategyQATrainer:
             compute_metrics=self.compute_metrics
         )
         
+        class TrainingCallback:
+            def __init__(self):
+                self.train_accuracies = []
+                
+            def on_epoch_end(self, args, state, control, model=None, **kwargs):
+                train_results = trainer.evaluate(eval_dataset=self.dataset["train"])
+                self.train_accuracies.append(train_results["eval_accuracy"])
+        
+        callback = TrainingCallback()
+        trainer.add_callback(callback)
         trainer.train()
         
         test_results = trainer.evaluate(eval_dataset=self.dataset["test"])
         
-        train_logs = [log for log in trainer.state.log_history if "train_loss" in log]
         eval_logs = [log for log in trainer.state.log_history if "eval_accuracy" in log]
         
         training_history = {
-            "train_loss": [log["train_loss"] for log in train_logs],
+            "train_accuracy": callback.train_accuracies,
             "eval_accuracy": [log["eval_accuracy"] for log in eval_logs],
             "test_accuracy": test_results["eval_accuracy"],
             "best_eval_accuracy": max([log["eval_accuracy"] for log in eval_logs]) if eval_logs else 0
@@ -213,14 +223,13 @@ class StrategyQATrainer:
         ax1.legend()
         ax1.grid(True, alpha=0.3)
         
-        # Training loss plot (since we don't have train accuracy)
-        if head_history["train_loss"] and lora_history["train_loss"]:
-            train_epochs = range(1, len(head_history["train_loss"]) + 1)
-            ax2.plot(train_epochs, head_history["train_loss"], 'b--', label='Head-Only Training Loss')
-            ax2.plot(train_epochs, lora_history["train_loss"], 'r--', label='LoRA Training Loss')
+        # Training accuracy plot
+        if head_history["train_accuracy"] and lora_history["train_accuracy"]:
+            ax2.plot(epochs, head_history["train_accuracy"], 'b--', label='Head-Only Training')
+            ax2.plot(epochs, lora_history["train_accuracy"], 'r--', label='LoRA Training')
             ax2.set_xlabel('Epoch')
-            ax2.set_ylabel('Loss')
-            ax2.set_title('Training Loss')
+            ax2.set_ylabel('Accuracy')
+            ax2.set_title('Training Accuracy')
             ax2.legend()
             ax2.grid(True, alpha=0.3)
         
