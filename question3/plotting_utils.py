@@ -43,16 +43,16 @@ def plot_trajectory(ax, trajectory: List[tuple], label: str, color: str, alpha: 
 def save_momentum_comparison_plot(func, trajectories: Dict[float, List[tuple]], 
                                 config: Config, filename: str):
     """Save plot comparing different momentum values."""
-    fig, ax = plt.subplots(figsize=(8, 8))
-    
-    create_contour_plot(func, config, ax, 
-                       f'Momentum Comparison - {func.get_name()}')
+    fig, axes = plt.subplots(2, 2, figsize=(12, 12))
+    axes = axes.flatten()
     
     colors = ['red', 'blue', 'green', 'orange']
     for i, (momentum, trajectory) in enumerate(trajectories.items()):
-        plot_trajectory(ax, trajectory, f'momentum={momentum}', colors[i])
+        create_contour_plot(func, config, axes[i], f'Momentum = {momentum}')
+        plot_trajectory(axes[i], trajectory, f'momentum={momentum}', colors[i])
+        axes[i].legend()
     
-    ax.legend()
+    plt.suptitle(f'Momentum Comparison - {func.get_name()}', fontsize=16)
     plt.tight_layout()
     plt.savefig(f'results/{filename}', dpi=300, bbox_inches='tight')
     plt.close()
@@ -85,16 +85,17 @@ def save_weight_decay_comparison_plot(func, trajectories_no_decay: Dict[float, L
 def save_maximization_plot(func, trajectories: Dict[str, List[tuple]], 
                           config: Config, filename: str):
     """Save plot for maximization experiment."""
-    fig, ax = plt.subplots(figsize=(8, 8))
-    
-    create_contour_plot(func, config, ax, 
-                       f'Maximization with maximize=True - {func.get_name()}')
+    fig, axes = plt.subplots(2, 2, figsize=(12, 12))
+    axes = axes.flatten()
     
     colors = ['red', 'blue', 'green', 'orange']
     for i, (label, trajectory) in enumerate(trajectories.items()):
-        plot_trajectory(ax, trajectory, label, colors[i])
+        momentum = label.split('=')[1]
+        create_contour_plot(func, config, axes[i], f'Momentum = {momentum} (maximize=True)')
+        plot_trajectory(axes[i], trajectory, label, colors[i])
+        axes[i].legend()
     
-    ax.legend()
+    plt.suptitle(f'Maximization Experiment - {func.get_name()}', fontsize=16)
     plt.tight_layout()
     plt.savefig(f'results/{filename}', dpi=300, bbox_inches='tight')
     plt.close()

@@ -31,14 +31,14 @@ class OptimizerExperiment:
         trajectory = []
         
         for iteration in range(self.config.num_iterations):
-            optimizer.zero_grad()
-            
-            loss = func(x, y)
             trajectory.append((x.item(), y.item()))
             
+            optimizer.zero_grad()
+            loss = func(x, y)
             loss.backward()
             optimizer.step()
         
+        trajectory.append((x.item(), y.item()))
         return trajectory
     
     def experiment_a_momentum_comparison(self):
