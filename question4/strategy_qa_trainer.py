@@ -28,14 +28,13 @@ class StrategyQATrainer:
     def load_and_preprocess_data(self):
         """Load and preprocess StrategyQA dataset."""
         dataset = load_dataset("wics/strategy-qa")
+        full_dataset = dataset["test"]  # only has test split
         
-        full_dataset = dataset["test"]
-        
-        train_test_split = full_dataset.train_test_split(test_size=0.3, seed=self.config.random_seed)
-        val_test_split = train_test_split["test"].train_test_split(test_size=0.5, seed=self.config.random_seed)
+        train_rest_split = full_dataset.train_test_split(test_size=0.2, seed=self.config.random_seed)
+        val_test_split = train_rest_split["test"].train_test_split(test_size=0.5, seed=self.config.random_seed)
         
         dataset_splits = {
-            "train": train_test_split["train"],
+            "train": train_rest_split["train"],
             "validation": val_test_split["train"], 
             "test": val_test_split["test"]
         }
