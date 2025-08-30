@@ -27,7 +27,14 @@ class StrategyQATrainer:
         
     def load_and_preprocess_data(self):
         """Load and preprocess StrategyQA dataset."""
-        dataset = load_dataset(self.config.dataset_name)
+        try:
+            dataset = load_dataset(self.config.dataset_name, trust_remote_code=True)
+        except RuntimeError:
+            dataset = load_dataset("json", data_files={
+                "train": "hf://datasets/wics/strategy-qa/train.jsonl",
+                "validation": "hf://datasets/wics/strategy-qa/dev.jsonl", 
+                "test": "hf://datasets/wics/strategy-qa/test.jsonl"
+            })
         
         def preprocess_function(examples):
             return self.tokenizer(
