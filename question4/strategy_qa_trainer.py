@@ -141,7 +141,7 @@ class StrategyQATrainer:
             learning_rate=self.config.learning_rate,
             logging_dir=f"{output_dir}/logs",
             logging_steps=10,
-            evaluation_strategy=self.config.evaluation_strategy,
+            eval_strategy=self.config.evaluation_strategy,
             save_strategy=self.config.save_strategy,
             load_best_model_at_end=True,
             metric_for_best_model="accuracy",
