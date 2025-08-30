@@ -84,7 +84,7 @@ class StrategyQATrainer:
     def calculate_lora_rank(self, target_params: int, model):
         """Calculate LoRA rank to match target parameter count."""
         
-        def estimate_lora_params(r, alpha=self.config.lora_alpha):
+        def estimate_lora_params(r):
             lora_params = 0
             for name, module in model.named_modules():
                 if hasattr(module, 'in_features') and hasattr(module, 'out_features'):
@@ -92,14 +92,21 @@ class StrategyQATrainer:
                         lora_params += (module.in_features * r) + (r * module.out_features)
             return lora_params
         
-        for r in range(1, 64):
-            estimated_params = estimate_lora_params(r)
-            if estimated_params >= target_params:
-                print(f"Selected LoRA rank: {r}, estimated parameters: {estimated_params}")
-                return r
+        # Binary search to find exact rank
+        best_r = 1
+        best_diff = float('inf')
         
-        print(f"Using default rank: {self.config.lora_r}")
-        return self.config.lora_r
+        for r in range(1, 32):
+            estimated_params = estimate_lora_params(r)
+            diff = abs(estimated_params - target_params)
+            if diff < best_diff:
+                best_diff = diff
+                best_r = r
+            if estimated_params >= target_params:
+                break
+        
+        print(f"Selected LoRA rank: {best_r}, estimated parameters: {estimate_lora_params(best_r)}, target: {target_params}")
+        return best_r
     
     def create_lora_model(self, target_params: int):
         """Create LoRA model with matching parameter count."""
@@ -166,7 +173,8 @@ class StrategyQATrainer:
                 self.trainer_instance = trainer_instance
                 self.dataset = dataset
                 
-            def on_epoch_end(self, args, state, control, model=None, **kwargs):
+            def on_evaluate(self, args, state, control, model=None, **kwargs):
+                # This runs right after validation evaluation
                 train_results = self.trainer_instance.evaluate(eval_dataset=self.dataset["train"])
                 self.train_accuracies.append(train_results["eval_accuracy"])
         
@@ -226,14 +234,13 @@ class StrategyQATrainer:
         ax1.grid(True, alpha=0.3)
         
         # Training accuracy plot
-        if head_history["train_accuracy"] and lora_history["train_accuracy"]:
-            ax2.plot(epochs, head_history["train_accuracy"], 'b--', label='Head-Only Training')
-            ax2.plot(epochs, lora_history["train_accuracy"], 'r--', label='LoRA Training')
-            ax2.set_xlabel('Epoch')
-            ax2.set_ylabel('Accuracy')
-            ax2.set_title('Training Accuracy')
-            ax2.legend()
-            ax2.grid(True, alpha=0.3)
+        ax2.plot(epochs, head_history["train_accuracy"], 'b--', label='Head-Only Training')
+        ax2.plot(epochs, lora_history["train_accuracy"], 'r--', label='LoRA Training')
+        ax2.set_xlabel('Epoch')
+        ax2.set_ylabel('Accuracy')
+        ax2.set_title('Training Accuracy')
+        ax2.legend()
+        ax2.grid(True, alpha=0.3)
         
         plt.tight_layout()
         plt.savefig('results/training_curves.png', dpi=300, bbox_inches='tight')
