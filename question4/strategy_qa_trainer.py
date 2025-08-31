@@ -261,7 +261,7 @@ class StrategyQATrainer:
             learning_rate=self.config.learning_rate,
             logging_dir=f"{output_dir}/logs",
             logging_strategy="epoch",
-            evaluation_strategy=self.config.evaluation_strategy,  # "epoch"
+            eval_strategy=self.config.evaluation_strategy,  # "epoch"
             save_strategy=self.config.save_strategy,              # "epoch"
             save_total_limit=3,
             load_best_model_at_end=True,
