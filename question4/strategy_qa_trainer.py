@@ -244,13 +244,16 @@ class StrategyQATrainer:
         
         print(f"Using target_modules: {target_modules}")
         
+        # For classifier-only fine-tuning, use modules_to_save instead of target_modules
+        # since classifier is a single Linear layer without sub-modules
         peft_config = LoraConfig(
             task_type=TaskType.SEQ_CLS,
             inference_mode=False,
             r=r,
             lora_alpha=self.config.lora_alpha,
             lora_dropout=self.config.lora_dropout,
-            target_modules=target_modules,
+            target_modules=["head.dense"],  # Apply LoRA to the dense layer before classifier
+            modules_to_save=["classifier"],  # Save/train the classifier fully
             bias="none"
         )
 
