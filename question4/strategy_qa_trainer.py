@@ -221,13 +221,36 @@ class StrategyQATrainer:
         r_star = (c * (d + 1)) / (d + c)
         r = max(1, int(round(r_star)))
 
+        # Debug: print module names to find correct target
+        print("Available modules:")
+        for name, module in base_model.named_modules():
+            if isinstance(module, torch.nn.Linear):
+                print(f"  {name}: {type(module).__name__} ({module.in_features} -> {module.out_features})")
+        
+        # Try common target module names for ModernBERT
+        possible_targets = ["classifier", "score", "classification_head", "cls.predictions", "pooler.dense"]
+        target_modules = []
+        
+        for target in possible_targets:
+            if any(target in name for name, _ in base_model.named_modules()):
+                target_modules.append(target)
+        
+        if not target_modules:
+            # Fallback: target the final linear layer by finding module with num_labels output
+            for name, module in base_model.named_modules():
+                if isinstance(module, torch.nn.Linear) and module.out_features == base_model.config.num_labels:
+                    target_modules.append(name)
+                    break
+        
+        print(f"Using target_modules: {target_modules}")
+        
         peft_config = LoraConfig(
             task_type=TaskType.SEQ_CLS,
             inference_mode=False,
             r=r,
             lora_alpha=self.config.lora_alpha,
             lora_dropout=self.config.lora_dropout,
-            target_modules=["classifier"],  # LoRA ONLY on classifier module
+            target_modules=target_modules,
             bias="none"
         )
 
