@@ -196,17 +196,20 @@ class StrategyQATrainer:
 
         print("Available modules for LoRA targeting:")
         target_modules = []
+        wo_modules = []
+        
         for name, module in base_model.named_modules():
             if isinstance(module, torch.nn.Linear):
                 print(f"  {name}: {module.in_features} -> {module.out_features}")
-                if "attention" in name and "output" in name:
-                    target_modules.append(name)
+                if "attn.Wo" in name:
+                    wo_modules.append(name)
         
-        if not target_modules:
-            target_modules = ["bert.encoder.layer.*.attention.output.dense"]
-            print(f"Using fallback target_modules: {target_modules}")
+        # Target only the LAST layer's W_o to get exactly 1536 parameters
+        if wo_modules:
+            target_modules = [wo_modules[-1]]  # Last W_o layer only
+            print(f"Targeting last W_o layer only: {target_modules}")
         else:
-            print(f"Found W_o target_modules: {target_modules}")
+            raise RuntimeError("Could not find any attn.Wo modules in ModernBERT")
 
         peft_config = LoraConfig(
             task_type=TaskType.SEQ_CLS,
@@ -222,7 +225,7 @@ class StrategyQATrainer:
 
         lora_params = self.count_trainable_parameters(model)
         print(f"[LoRA] Trainable parameters: {lora_params}")
-        print(f"[LoRA] Expected: rank=1 × (768+768) = 1536 parameters")
+        print(f"[LoRA] Expected: rank=1 × (768+768) × 1 layer = 1536 parameters")
         print(f"[LoRA] Parameter difference from head-only: {lora_params - head_param_budget}")
         return model, lora_params
 
