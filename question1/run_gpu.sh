@@ -6,7 +6,7 @@
 
 #SBATCH --job-name=AttentionProfiler_GPU
 #SBATCH --nodes=1
-#SBATCH --mem-per-cpu=24GB
+#SBATCH --mem-per-cpu=12GB
 #SBATCH --gpus=1
 #SBATCH --partition=gpu-a100
 #SBATCH --account=a100acct

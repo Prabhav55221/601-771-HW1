@@ -7,5 +7,5 @@ class Config:
     random_seed = 42
     test_single_head = True
     test_multi_head = True
-    test_cpu = False
-    test_gpu = True
+    test_cpu = True
+    test_gpu = False
