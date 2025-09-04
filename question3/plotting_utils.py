@@ -1,3 +1,7 @@
+"""Plotting utilities for optimization experiment visualization.
+
+Author: Prabhav Singh
+"""
 import torch
 import numpy as np
 import matplotlib.pyplot as plt

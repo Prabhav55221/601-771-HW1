@@ -1,3 +1,7 @@
+"""2D optimization functions for SGD experiments.
+
+Author: Prabhav Singh
+"""
 import torch
 
 

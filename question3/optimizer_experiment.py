@@ -1,3 +1,7 @@
+"""PyTorch SGD optimization experiments on 2D quadratic functions.
+
+Author: Prabhav Singh
+"""
 import torch
 import numpy as np
 from typing import List, Dict, Tuple
@@ -14,6 +18,7 @@ class OptimizerExperiment:
     """Orchestrates PyTorch optimization experiments with SGD."""
     
     def __init__(self, config: Config):
+        """Initialize experiment with configuration."""
         self.config = config
         torch.manual_seed(config.random_seed)
         np.random.seed(config.random_seed)

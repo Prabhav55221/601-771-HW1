@@ -1,4 +1,11 @@
+"""Configuration for SGD optimization experiments.
+
+Author: Prabhav Singh
+"""
+
+
 class Config:
+    """Configuration parameters for optimization experiments."""
     learning_rate = 0.1
     num_iterations = 100
     starting_x = 2.0
