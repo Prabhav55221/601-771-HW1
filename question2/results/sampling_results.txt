@@ -2,44 +2,273 @@ SAMPLING COMPARISON
 ===================
 
 Prompt: 'Once upon a time'
-Max length: 500 tokens
+Generation length: 500 new tokens
 
 GREEDY DECODING:
 --------------------------------------------------
-Once upon a time of war, the United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a
+Once upon a time of war, the United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The
+
+TEMPERATURE SAMPLING (T=0) - Equivalent to Greedy:
+--------------------------------------------------
+Once upon a time of war, the United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The United States was the only country in the world to have a military presence. The
 
 TEMPERATURE SAMPLING (T=0.3):
 --------------------------------------------------
-Once upon a time when the world was in a state of flux, the world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux. The world was in a state of flux.
+Once upon a time, the world was a very different place. It was a very different place.
+
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+※
+
+※
+※
+※
+※
+※
+※
+※
+※
+※
+
+※
+※
+※
+※
+※
+※
+※
+※
+
+※
+※
+※
+
+※
+※
+
+※
+
+※
+※
+※
+※
+
+※
+
+※
+※
+※
+※
+※
+※
+※
+※
+
+
+※
+
+
+
+※
+
+
+※
+
+
+※
+
+※
+※
+※
+
+
+
+
+※
+
+
+※
+
+
+
+※
+
+
+※
+
+
+※
+
+
+
+※
+
+
+
+※
+
+
+※
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 TEMPERATURE SAMPLING (T=0.6):
 --------------------------------------------------
-Once upon a time of the year, it's been a good day for me to have a good day in the morning. I am so grateful to the local community for helping me get a good day in the morning.
+Once upon a time when the world was a little different, we are no longer living in a place where the world is just a little bit different. In that sense, we are living in a world where the world is simply a little bit different, and it is a lot more realistic to have people be able to see and interact with each other, and that's one thing that's really really important to us."
 
-I will be back to the area soon to start my day in the morning. I will also be enjoying the day with my family.
-I will be doing some community service and will be hosting a Christmas Tree Day event. I will be participating in the Christmas Day Parade and Christmas Party. I will be doing some community service and will be hosting a Christmas Tree Day event.
-I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event.
-I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be doing some community service and will be hosting a Christmas Tree Day event. I will be
+
+
+"You can't just be a little surprised by the new world but also in a way that's really exciting and exciting to me," he says. "That's what makes it so exciting to be part of a new world that's really happening."
 
 TEMPERATURE SAMPLING (T=0.9):
 --------------------------------------------------
-Once upon a time of your life you’ll be in a unique position― . . . and what other opportunities are there . . . .?
-So there is no better place to live than in the home you love!
+Once upon a time when I was 16, I found out that there was a lot more to learning over the years in this area than just playing basketball. In fact, I'm pretty sure with my younger brother and his brother-in-law, he was actually watching the show with a little bit of respect. So from his experience, my thoughts were on the topic, how easy it is to create something with that respect. I think that's great. I don't know if I can do more than just play basketball, I don't know if I can do that.
+
+
+
+
+Advertisement - Continue Reading Below
+
+That sounds like a pretty good idea.
+
+From what I've learned from my childhood, it's a bit weird to make a show as fun as possible without having too much fun. I don't like watching a lot of kids, or I just keep watching TV while they're kids. This is different from watching a lot of sports, I just want to make it fun and exciting for everyone.
+But I think that's kind of what I've seen with my younger brothers and sisters. And I think that's how I think growing up, especially now that I know I can do that.
+When we're not playing basketball, we're all competing for a spot on the national basketball court. I don't even remember having a shot on the court at a team. My brothers, though, were on the court to the game, and they were there. They were like, "Hey, this is my first shot at basketball." I remember just being there. I remember being there.
+I'm definitely not a huge fan of college basketball. I think we are all excited about that. I mean, how does a lot of fun it be if you can play basketball together and play together?
+It's pretty much all about doing it together. It's just more about going together.
+"I just always try to do whatever I can in our team and don't give up. I'm not that big fan. I just want to get better. I really want to play basketball with my brothers and sisters, and I hope they will both live with me the way I'm. I just love playing.
+"And that's kind of how I want to be. I want to be able to play in every sport you play with. I have no problem with that. I just want to be able to play with my brothers and sisters. I
 
 TEMPERATURE SAMPLING (T=1.2):
 --------------------------------------------------
-Once upon a time when many people, like I say in an era of the greatest hits, become aware they may no longer be aware of themselves. Perhaps, the person most familiar with the game has a clue, or may not recognize that he or she is at work or talking for the better.
+Once upon a time when women were living in the country‏s most vibrant economies, it took a remarkable ten years for men to become truly elite and, for example, earn more than $4,500 per year. Now, at the turn of the 30th century, they're getting married in the United States. This unprecedented opportunity to be a major American economic success comes as an economic crisis looms over the rest of the world—and the World Bank is urging its states to help finance one of their greatest problems right now on its own soil. The International Monetary Fund, formerly known as the Global Economic Forum (IMF), the U.S. Council on Budget Responsibility estimates that by 2050 alone, U.S. economic growth will peak in the U.S. alone. The IMF, meanwhile, says that this past December, in fact, the U.S. economy has grown 17-fold since 1999 and already has a much more resilient recovery.
 
 
-Advertisement
-
-
-
-What‡s so important about any player who doesn't yet remember much about the game is that, even the moment they're playing it, it never becomes apparent how long it has been played. What can happen when a new release or a new console's game goes public only to find out about any single character and new gameplay that the average member of you never even read before.
-The game will only come because of the first ever official trailer by Blizzard's new CEO, Steve Ballmer. So that's not surprising considering the long awaited beta of the game in North America, so as not to mention the fact that the official trailer looks like the game has already started to roll. After all, I don't expect the release date to come until then, but we'll post details soon at a news event.
-If you follow Blizzard's video chat and wish even further information about this game, consider supporting the Kickstarter here, via Patreon! [DeadBall]
+And yet, no one was so eager to raise their heads at the prospect of an economic "insure," as they once did—so long as their daughters were not able to read the paper on the subject. As Mother Jones found, while much of the U.S.'s growth rate could have been helped by a return to economic prosperity from the 1930s, such as the American Recovery and Reinvestment Act, America's fiscal challenges, and the World Bank's efforts to expand in size, in particular, were the root cause of U.S. economic weakness, especially where those challenges have become a main focus of U.S. efforts towards addressing our crisis. Indeed, it seems that the IMF predicts that an "insure" of the future could mean a greater degree of economic instability for the United States.
+But despite this reality, it remains more or less likely that, over the next 20 years, the global financial world will have less reason to hope to keep its promise. As William Schule, who once described a world "as far away as we go—at its weakest point in history—the next two decades of economic instability will surely not do much for America's economy."
 
 TEMPERATURE SAMPLING (T=1.5):
 --------------------------------------------------
-Once upon a time that existed only a quarter century ago during the First Nation‬ that was of white supremacist heritage, and at that time was the first place one could think that we were beginning to learn to expect black people. If I recall back then, at that point, all of our political activity—not only from young activists across the federal, provincial, provincial and national landscape—was so completely segregated by history today, no two of us had experienced anything like that. So there was a lot to be said about it. As political parties do. The main thing that the U.S. mainstream public view as having as black and female over our period—there is a widespread sense in how the U.S. government was viewed by the people that this didn't happen before they even opened their eyes. So that is basically everything that has not occurred within this current era. There simply isn't some kind of consensus that Black people are going through this, even on the very low side—but we all are starting to understand this. And that, I mean... I don't get an unfair way of talking to people as political organizations but I can point you out for a few seconds, how these things aren't really at that level in many communities today. The idea that African American folks in government were being harassed by U.S. officials just because they had this particular race has made some white nationalists to want into the organization really look around as we do here. And while it is an acknowledgement the very establishment of such behavior is something that most people do not even realise, these kinds of comments, of comments have now gone viral right now, but it does take a lot as the media has been saying all over the place, these kinds of comments by people that have gone viral on social media, but you can say we could get there soon, and as far as politics stays out of any situation as we've seen it—like we just heard from a large portion of the community. The whole experience of being forced out of the company, it just took a little effort by our government to look at our policies for the past twenty or forty quarters of a century when those policies were at the forefront. In some regard this sort of statement of exclusion has become an excuse for the things that are still the majority among our party over recent years. How we view the system can't go forward. How is being able to defend our ideals if it is something as wrong as things like
+Once upon a time when the Internet seemed out of the ordinary. While they were making sense during the recent riots in Boston, it turned out none of them knew anything about politics — the Obama administration tried to use those words last summer because the media couldn, in fact, look through a series of public comments and put the FBI as some kind of tool of distraction for the national interest, with Clinton at least willing to fight to make all the facts, which became so familiar that we no longer had information.
+
+
+But what exactly did they say back on Aug. 8 about what they were saying publicly to the president? And was it even so common on Sunday evening after an FBI spokesperson publicly accused President Obama of colluding to help Hillary Clinton gain any more ground? Why was that so familiar?
+Now, the FBI will investigate the connections made by Trump on Election Day to figure out what exactly. It'll likely release several more photos soon of Clinton having any real-estate dealings involving her. And, of course, no questions will be left in Comey‏' chambers, including Trump that he did little last week. Whatever comes before and during the presidential debate comes off like most of these controversies would at least give them pause, and no doubt, they'll likely raise further tension.
+And as our readers may probably guess, many of these interactions were the sort of bad things Clinton took during her campaign. However, by some measures you get to blame for an investigation the way it always took to ensure you never get to.
+As recently as August 2016 (the month before Comey decided Hillary was president), Clinton seemed not in fact able to deal with the Clinton probe either completely through public appearances. Perhaps she went along as well: the question marks came down to exactly how easy or straightforward that could be as she asked some friends or members of the government or not… when it didn‌t end.
+This came with what turned out to be an exceedingly tricky process for these people, both at the federal level and at the state level. For a person trying to decide how long each member of the Federal government had been involved, in private policy that no good means for everyone, at least for some individuals in that post  how will they go about deciding what time to go? (It depends entirely to whether or not they really are the same as each other as they have been together.) Given you haven‭t gotten much inside politics or public opinion recently, you may not be able just
 

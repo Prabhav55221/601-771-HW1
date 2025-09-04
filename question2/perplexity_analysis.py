@@ -1,3 +1,7 @@
+"""Perplexity analysis with DistilGPT2.
+
+Author: Prabhav Singh
+"""
 import torch
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import numpy as np
@@ -5,6 +9,7 @@ import random
 import os
 
 def load_model():
+    """Load DistilGPT2 model and tokenizer."""
     model_name = "distilgpt2"
     tokenizer = GPT2Tokenizer.from_pretrained(model_name)
     model = GPT2LMHeadModel.from_pretrained(model_name)
@@ -16,11 +21,12 @@ def load_model():
     return model, tokenizer
 
 def compute_perplexity(text, model, tokenizer):
+    """Compute perplexity of text using sliding window approach."""
     inputs = tokenizer(text, return_tensors="pt")
     input_ids = inputs["input_ids"]
     seq_len = input_ids.size(1)
     
-    max_length = model.config.n_positions  # 1024 for DistilGPT2
+    max_length = model.config.n_positions
     stride = 512
     
     nlls = []
@@ -29,7 +35,7 @@ def compute_perplexity(text, model, tokenizer):
     with torch.no_grad():
         for begin_loc in range(0, seq_len, stride):
             end_loc = min(begin_loc + max_length, seq_len)
-            trg_len = end_loc - prev_end_loc  # only score new tokens
+            trg_len = end_loc - prev_end_loc
             
             input_ids_slice = input_ids[:, begin_loc:end_loc]
             target_ids = input_ids_slice.clone()
@@ -37,7 +43,6 @@ def compute_perplexity(text, model, tokenizer):
             
             outputs = model(input_ids_slice, labels=target_ids)
             
-            # Skip if loss is None or NaN
             if outputs.loss is not None and not torch.isnan(outputs.loss):
                 neg_log_likelihood = outputs.loss * trg_len
                 nlls.append(neg_log_likelihood)
@@ -53,6 +58,7 @@ def compute_perplexity(text, model, tokenizer):
     return ppl.item()
 
 def shuffle_paragraph(text):
+    """Shuffle sentences in paragraph randomly."""
     sentences = text.strip().split('. ')
     sentences = [s + '.' if not s.endswith('.') else s for s in sentences if s.strip()]
     if sentences[-1].endswith('..'):
@@ -62,6 +68,7 @@ def shuffle_paragraph(text):
     return ' '.join(sentences)
 
 def run_perplexity_analysis():
+    """Run perplexity analysis on original vs shuffled paragraph."""
     model, tokenizer = load_model()
     
     with open('paragraph.txt', 'r') as f:
