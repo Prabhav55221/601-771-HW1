@@ -1,0 +1,38 @@
+{
+  "experiment_info": {
+    "total_claims": 809,
+    "total_evidence_docs": 5183,
+    "claims_with_ground_truth": 0,
+    "retrieval_cutoff": 50
+  },
+  "evaluation_results": {
+    "MRR": {
+      "1": 0.0,
+      "10": 0.0,
+      "50": 0.0
+    },
+    "MAP": {
+      "1": 0.0,
+      "10": 0.0,
+      "50": 0.0
+    }
+  },
+  "table_format": {
+    "OpenAI_Embeddings": {
+      "MRR@1": 0.0,
+      "MAP@1": 0.0,
+      "MRR@10": 0.0,
+      "MAP@10": 0.0,
+      "MRR@50": 0.0,
+      "MAP@50": 0.0
+    },
+    "ElasticSearch": {
+      "MRR@1": null,
+      "MAP@1": null,
+      "MRR@10": null,
+      "MAP@10": null,
+      "MRR@50": null,
+      "MAP@50": null
+    }
+  }
+}

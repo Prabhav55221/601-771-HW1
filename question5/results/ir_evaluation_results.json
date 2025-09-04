@@ -1,0 +1,18 @@
+{
+  "OpenAI_Embeddings": {
+    "MRR@1": 0.0,
+    "MAP@1": 0.0,
+    "MRR@10": 0.0,
+    "MAP@10": 0.0,
+    "MRR@50": 0.0,
+    "MAP@50": 0.0
+  },
+  "ElasticSearch": {
+    "MRR@1": null,
+    "MAP@1": null,
+    "MRR@10": null,
+    "MAP@10": null,
+    "MRR@50": null,
+    "MAP@50": null
+  }
+}

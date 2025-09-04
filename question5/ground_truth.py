@@ -12,7 +12,7 @@ def load_scifact_ground_truth() -> Dict[int, Set[int]]:
     Returns:
         Dictionary mapping claim_id -> set of relevant evidence_doc_ids
     """
-    dataset = load_dataset("allenai/scifact", "claims")
+    dataset = load_dataset("allenai/scifact", "claims", trust_remote_code=True)
     
     ground_truth = {}
     
