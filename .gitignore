@@ -69,3 +69,4 @@ results/*.csv
 CLAUDE.md
 question4/results/head_only
 question4/results/lora
+*.ipynb
