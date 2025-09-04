@@ -14,6 +14,9 @@ dependencies:
   - seaborn
   - tqdm
   - psutil
+  - scipy
+  - scikit-learn
+  - faiss-cpu
   - pip
   - pip:
     - torchprofile
@@ -21,3 +24,4 @@ dependencies:
     - transformers
     - peft
     - datasets
+    - openai

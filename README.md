@@ -2,10 +2,13 @@
 
 Homework Assignment 1 - Prabhav Singh
 
-## Structure
+## Project Structure
 
-- `question1/` - Self-Attention Profiling and Analysis
-- `question2/` - (Future questions)
+- **`profiling_self_attention/`** - Self-Attention Profiling (FLOPS, memory, timing analysis)
+- **`perpexity/`** - DistilGPT2 Analysis (perplexity and sampling experiments)  
+- **`sgd_behaviour/`** - SGD Optimization (momentum and weight decay effects)
+- **`fineturning_moderbert/`** - ModernBERT Fine-tuning (head-only vs LoRA comparison)
+- **`retrieval/`** - Information Retrieval (FAISS-based SciFact search)
 
 ## Setup
 
@@ -15,9 +18,4 @@ conda env create -f environment.yml
 conda activate nlp-hw1
 ```
 
-2. Navigate to specific question directory to run code
-
-## Requirements
-
-- PyTorch with CUDA support
-- GPU-enabled server for performance comparisons
+2. Navigate to specific question directory to run experiments
