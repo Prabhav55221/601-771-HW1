@@ -58,14 +58,10 @@ def compute_perplexity(text, model, tokenizer):
     return ppl.item()
 
 def shuffle_paragraph(text):
-    """Shuffle sentences in paragraph randomly."""
-    sentences = text.strip().split('. ')
-    sentences = [s + '.' if not s.endswith('.') else s for s in sentences if s.strip()]
-    if sentences[-1].endswith('..'):
-        sentences[-1] = sentences[-1][:-1]
-    
-    random.shuffle(sentences)
-    return ' '.join(sentences)
+    """Shuffle words in paragraph randomly."""
+    words = text.strip().split()
+    random.shuffle(words)
+    return ' '.join(words)
 
 def run_perplexity_analysis():
     """Run perplexity analysis on original vs shuffled paragraph."""
