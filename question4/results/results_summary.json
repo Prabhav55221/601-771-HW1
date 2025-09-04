@@ -1,0 +1,12 @@
+{
+  "Head-Only": {
+    "test_accuracy": 0.5065502183406113,
+    "validation_accuracy": 0.5676855895196506,
+    "trainable_parameters": 1538
+  },
+  "LoRA": {
+    "test_accuracy": 0.47161572052401746,
+    "validation_accuracy": 0.48034934497816595,
+    "trainable_parameters": 3074
+  }
+}

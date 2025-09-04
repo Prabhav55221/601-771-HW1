@@ -1,0 +1,7 @@
+StrategyQA Classification Results
+========================================
+
+Approach        Test Acc   Val Acc    Params      
+--------------------------------------------------
+Head-Only       0.5066     0.5677     1538        
+LoRA            0.4716     0.4803     3074        
