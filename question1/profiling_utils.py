@@ -1,3 +1,7 @@
+"""Profiling utilities for self-attention analysis.
+
+Author: Prabhav Singh
+"""
 import torch
 import time
 import psutil
@@ -19,17 +23,40 @@ except ImportError:
 
 
 class FLOPSCounter:
+    """FLOPS counting utilities using PyTorch profiler and fallback methods."""
+    
     @staticmethod
     def count_flops(model, input_tensor):
+        """Count FLOPs for model inference."""
+        return FLOPSCounter._count_with_pytorch_profiler(model, input_tensor)
+    
+    @staticmethod
+    def _count_with_pytorch_profiler(model, input_tensor):
+        """Count FLOPs using PyTorch profiler."""
+        model.eval()
+        with torch.no_grad():
+            with torch.profiler.profile(
+                activities=[torch.profiler.ProfilerActivity.CPU, torch.profiler.ProfilerActivity.CUDA],
+                with_flops=True
+            ) as prof:
+                _ = model(input_tensor)
+            
+            total_flops = sum([event.flops for event in prof.events() if event.flops > 0])
+            return total_flops if total_flops > 0 else FLOPSCounter._count_with_fallback(model, input_tensor)
+    
+    @staticmethod
+    def _count_with_fallback(model, input_tensor):
+        """Fallback FLOPS counting methods."""
         if FVCORE_AVAILABLE:
             return FLOPSCounter._count_with_fvcore(model, input_tensor)
         elif TORCHPROFILE_AVAILABLE:
             return FLOPSCounter._count_with_torchprofile(model, input_tensor)
         else:
-            return FLOPSCounter._count_manual(model, input_tensor)
+            raise RuntimeError("No FLOPS counting library available. Please install fvcore or torchprofile.")
     
     @staticmethod
     def _count_with_fvcore(model, input_tensor):
+        """Count FLOPs using fvcore."""
         model.eval()
         with torch.no_grad():
             flop_dict, _ = flop_count(model, (input_tensor,), supported_ops=None)
@@ -37,33 +64,19 @@ class FLOPSCounter:
     
     @staticmethod
     def _count_with_torchprofile(model, input_tensor):
+        """Count FLOPs using torchprofile."""
         model.eval()
         with torch.no_grad():
             macs = profile_macs(model, input_tensor)
             return macs * 2
-    
-    @staticmethod
-    def _count_manual(model, input_tensor):
-        batch_size, seq_len, d_model = input_tensor.shape
-        
-        if hasattr(model, 'num_heads'):
-            num_heads = model.num_heads
-            d_k = d_model // num_heads
-            qkv_flops = 3 * seq_len * d_model * d_model
-            attention_flops = num_heads * (2 * seq_len * seq_len * d_k)
-            output_flops = seq_len * d_model * d_model
-            total_flops = qkv_flops + attention_flops + output_flops
-        else:
-            qkv_flops = 3 * seq_len * d_model * d_model
-            attention_flops = 2 * seq_len * seq_len * d_model
-            total_flops = qkv_flops + attention_flops
-        
-        return total_flops * batch_size
 
 
 class Timer:
+    """Timing utilities for performance measurement."""
+    
     @staticmethod
     def time_function(func, *args, num_runs=1, warmup_runs=3, device='cpu'):
+        """Time function execution with warmup and multiple runs."""
         for _ in range(warmup_runs):
             if device == 'cuda' and torch.cuda.is_available():
                 torch.cuda.synchronize()
@@ -72,7 +85,9 @@ class Timer:
                 torch.cuda.synchronize()
         
         times = []
-        for _ in range(num_runs):
+        for run_idx in range(num_runs):
+            torch.manual_seed(torch.randint(0, 10000, (1,)).item())
+            
             if device == 'cuda' and torch.cuda.is_available():
                 torch.cuda.synchronize()
                 
@@ -89,6 +104,7 @@ class Timer:
 
 
 def compute_statistics(values: List[float]) -> Dict[str, float]:
+    """Compute statistical measures for timing data."""
     import numpy as np
     
     mean = np.mean(values)

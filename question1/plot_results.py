@@ -1,13 +1,18 @@
+"""Plotting utilities for self-attention profiling results.
+
+Author: Prabhav Singh
+"""
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
+import os
 
 
 def plot_complexity_trends(results_df):
-    """Plot FLOPS, memory usage, and timing trends with error bars"""
+    """Plot FLOPS, memory usage, and timing trends with error bars."""
+    os.makedirs('results', exist_ok=True)
     
-    # Get device suffix for filename
     devices = results_df['device'].unique()
     device_suffix = '_'.join(sorted(devices))
     
@@ -31,7 +36,7 @@ def plot_complexity_trends(results_df):
 
 
 def _plot_metric(df, y_col, error_col, x_label, y_label, title, ax):
-    """Plot a single metric with error bars"""
+    """Plot a single metric with error bars."""
     for attention_type in df['attention_type'].unique():
         for device in df['device'].unique():
             subset = df[(df['attention_type'] == attention_type) & 
@@ -55,8 +60,9 @@ def _plot_metric(df, y_col, error_col, x_label, y_label, title, ax):
 
 
 def plot_scaling_analysis(results_df):
-    """Create separate detailed plots for scaling analysis"""
-    # Get device suffix for filename
+    """Create separate detailed plots for scaling analysis."""
+    os.makedirs('results', exist_ok=True)
+    
     devices = results_df['device'].unique()
     device_suffix = '_'.join(sorted(devices))
     

@@ -1,3 +1,7 @@
+"""Self-attention profiling and analysis.
+
+Author: Prabhav Singh
+"""
 import torch
 import pandas as pd
 import numpy as np
@@ -13,7 +17,10 @@ from plot_results import plot_complexity_trends, plot_scaling_analysis
 
 
 class SelfAttentionProfiler:
+    """Profiles self-attention mechanisms for computational analysis."""
+    
     def __init__(self, config: Config):
+        """Initialize profiler with configuration."""
         self.config = config
         torch.manual_seed(config.random_seed)
         np.random.seed(config.random_seed)
@@ -25,6 +32,7 @@ class SelfAttentionProfiler:
         self.results = []
         
     def create_random_input(self, seq_len: int, device: str) -> torch.Tensor:
+        """Create random input tensor for profiling."""
         input_tensor = torch.randn(
             self.config.batch_size, 
             seq_len, 
@@ -36,6 +44,7 @@ class SelfAttentionProfiler:
     
     def profile_attention_layer(self, model, input_tensor, attention_type: str, 
                               device: str, seq_len: int) -> Dict:
+        """Profile attention layer for FLOPs, memory, and timing."""
         model.eval()
         
         flops = FLOPSCounter.count_flops(model, input_tensor)
@@ -51,16 +60,13 @@ class SelfAttentionProfiler:
             peak_memory_bytes = torch.cuda.max_memory_allocated()
             peak_memory_mb = peak_memory_bytes / (1024 * 1024)
         else:
-            # For CPU, estimate memory based on tensor sizes
             batch_size, seq_len, d_model = input_tensor.shape
             
-            # Estimate memory usage: input + Q,K,V + attention matrix + output
-            input_mem = input_tensor.numel() * 4  # float32 = 4 bytes
-            qkv_mem = 3 * input_mem  # Q, K, V tensors
-            attention_mem = batch_size * seq_len * seq_len * 4  # attention weights
+            input_mem = input_tensor.numel() * 4
+            qkv_mem = 3 * input_mem
+            attention_mem = batch_size * seq_len * seq_len * 4
             
             if hasattr(model, 'num_heads'):
-                # Multi-head: attention computed per head
                 attention_mem = batch_size * model.num_heads * seq_len * seq_len * 4
             
             total_mem_bytes = input_mem + qkv_mem + attention_mem
@@ -91,6 +97,7 @@ class SelfAttentionProfiler:
         }
     
     def run_profiling_experiment(self):
+        """Run complete profiling experiment across configurations."""
         print("Starting Self-Attention Profiling Experiment")
         print(f"Testing sequence lengths: {self.config.sequence_lengths}")
         print(f"Number of runs per measurement: {self.config.num_runs}")
@@ -146,6 +153,7 @@ class SelfAttentionProfiler:
         print(f"\nCompleted {len(self.results)} experiments")
     
     def process_results(self) -> pd.DataFrame:
+        """Process raw results into structured DataFrame."""
         processed_results = []
         
         for result in self.results:
@@ -164,10 +172,12 @@ class SelfAttentionProfiler:
         return pd.DataFrame(processed_results)
     
     def generate_plots(self, df: pd.DataFrame):
+        """Generate complexity and scaling plots."""
         plot_complexity_trends(df)
         plot_scaling_analysis(df)
     
     def print_summary(self, df: pd.DataFrame):
+        """Print summary of profiling results."""
         print("\n" + "="*60)
         print("PROFILING RESULTS SUMMARY")
         print("="*60)

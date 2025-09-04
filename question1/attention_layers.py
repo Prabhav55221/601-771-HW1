@@ -1,3 +1,7 @@
+"""Self-attention layer implementations.
+
+Author: Prabhav Singh
+"""
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -5,7 +9,10 @@ import math
 
 
 class SingleHeadAttention(nn.Module):
+    """Single-head self-attention implementation."""
+    
     def __init__(self, d_model):
+        """Initialize single-head attention layer."""
         super().__init__()
         self.d_model = d_model
         self.sqrt_d_model = math.sqrt(d_model)
@@ -15,6 +22,7 @@ class SingleHeadAttention(nn.Module):
         self.W_v = nn.Linear(d_model, d_model, bias=False)
         
     def forward(self, x):
+        """Forward pass through single-head attention."""
         Q = self.W_q(x)
         K = self.W_k(x)
         V = self.W_v(x)
@@ -27,7 +35,10 @@ class SingleHeadAttention(nn.Module):
 
 
 class MultiHeadAttention(nn.Module):
+    """Multi-head self-attention implementation."""
+    
     def __init__(self, d_model, num_heads):
+        """Initialize multi-head attention layer."""
         super().__init__()
         assert d_model % num_heads == 0
         
@@ -42,6 +53,7 @@ class MultiHeadAttention(nn.Module):
         self.W_o = nn.Linear(d_model, d_model, bias=False)
         
     def forward(self, x):
+        """Forward pass through multi-head attention."""
         batch_size, seq_len, _ = x.size()
         
         Q = self.W_q(x).view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
