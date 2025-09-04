@@ -1,4 +1,11 @@
+"""Configuration for ModernBERT StrategyQA fine-tuning experiments.
+
+Author: Prabhav Singh
+"""
+
+
 class Config:
+    """Configuration parameters for StrategyQA experiments."""
     model_name = "answerdotai/ModernBERT-base"
     dataset_name = "wics/strategy-qa"
     
@@ -7,7 +14,7 @@ class Config:
     learning_rate = 2e-5
     max_length = 512
     
-    lora_r = 8
+    lora_r = 1  # Rank=1 to match head parameter count
     lora_alpha = 16
     lora_dropout = 0.1
     

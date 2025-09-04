@@ -1,4 +1,7 @@
-# strategyqa_modernbert.py
+"""ModernBERT fine-tuning on StrategyQA with head-only and LoRA approaches.
+
+Author: Prabhav Singh
+"""
 
 import os
 import json
@@ -21,6 +24,7 @@ from peft import get_peft_model, LoraConfig, TaskType
 # ----------------------------
 
 class Config:
+    """Configuration for ModernBERT StrategyQA experiments."""
     model_name = "answerdotai/ModernBERT-base"
     dataset_name = "wics/strategy-qa"
 
@@ -29,6 +33,7 @@ class Config:
     learning_rate = 2e-5
     max_length = 512
 
+    lora_r = 1  # Rank=1 to match head parameters
     lora_alpha = 16
     lora_dropout = 0.1
 
@@ -177,90 +182,48 @@ class StrategyQATrainer:
                 raise RuntimeError("Could not locate classification head to unfreeze.")
 
         head_params = self.count_trainable_parameters(model)
-        print(f"[Head-only] trainable parameters: {head_params}")
+        print(f"[Head-only] Trainable parameters: {head_params}")
+        print(f"[Head-only] Expected: 768×2 + 2 (bias) = 1538 parameters")
         return head_params
 
-    def _classifier_dims(self, model: torch.nn.Module) -> Tuple[int, int]:
-        """Return (in_features=d, out_features=c) for classifier Linear."""
-        head = getattr(model, "classifier", None) or getattr(model, "score", None) or getattr(model, "classification_head", None)
-
-        candidates = []
-        if head is not None:
-            for m in head.modules():
-                if isinstance(m, torch.nn.Linear) and m.out_features == model.config.num_labels:
-                    candidates.append(m)
-
-        if not candidates:
-            for m in model.modules():
-                if isinstance(m, torch.nn.Linear) and m.out_features == model.config.num_labels:
-                    candidates.append(m)
-
-        if not candidates:
-            raise RuntimeError("Could not infer classifier Linear dims.")
-        # Pick the first match
-        lin = candidates[0]
-        return lin.in_features, lin.out_features
 
     def create_lora_model(self, head_param_budget: int) -> Tuple[torch.nn.Module, int]:
-        """
-        LoRA only on the classifier module.
-        Freeze all base weights (including classifier base weights).
-        Choose rank r so that LoRA trainable params ~ head-only budget.
-        """
+        """Create LoRA model targeting only W_o layers with rank=1."""
         base_model = self.create_base_model()
 
-        # Freeze EVERYTHING; LoRA adapters will be the only trainable params
         for p in base_model.parameters():
             p.requires_grad = False
 
-        d, c = self._classifier_dims(base_model)
-        # head-only params: weights (c*d) + bias (c)
-        p_head = c * (d + 1)
-
-        # ideal real-valued r* to match c(d+1) ≈ r(d+c)
-        r_star = (c * (d + 1)) / (d + c)
-        r = max(1, int(round(r_star)))
-
-        # Debug: print module names to find correct target
-        print("Available modules:")
+        print("Available modules for LoRA targeting:")
+        target_modules = []
         for name, module in base_model.named_modules():
             if isinstance(module, torch.nn.Linear):
-                print(f"  {name}: {type(module).__name__} ({module.in_features} -> {module.out_features})")
-        
-        # Try common target module names for ModernBERT
-        possible_targets = ["classifier", "score", "classification_head", "cls.predictions", "pooler.dense"]
-        target_modules = []
-        
-        for target in possible_targets:
-            if any(target in name for name, _ in base_model.named_modules()):
-                target_modules.append(target)
+                print(f"  {name}: {module.in_features} -> {module.out_features}")
+                if "attention" in name and "output" in name:
+                    target_modules.append(name)
         
         if not target_modules:
-            # Fallback: target the final linear layer by finding module with num_labels output
-            for name, module in base_model.named_modules():
-                if isinstance(module, torch.nn.Linear) and module.out_features == base_model.config.num_labels:
-                    target_modules.append(name)
-                    break
-        
-        print(f"Using target_modules: {target_modules}")
-        
-        # For classifier-only fine-tuning, use modules_to_save instead of target_modules
-        # since classifier is a single Linear layer without sub-modules
+            target_modules = ["bert.encoder.layer.*.attention.output.dense"]
+            print(f"Using fallback target_modules: {target_modules}")
+        else:
+            print(f"Found W_o target_modules: {target_modules}")
+
         peft_config = LoraConfig(
             task_type=TaskType.SEQ_CLS,
             inference_mode=False,
-            r=r,
+            r=self.config.lora_r,  # rank=1 
             lora_alpha=self.config.lora_alpha,
             lora_dropout=self.config.lora_dropout,
-            target_modules=["head.dense"],  # Apply LoRA to the dense layer before classifier
-            modules_to_save=["classifier"],  # Save/train the classifier fully
+            target_modules=target_modules,
             bias="none"
         )
 
         model = get_peft_model(base_model, peft_config)
 
         lora_params = self.count_trainable_parameters(model)
-        print(f"[LoRA] budget(head)={p_head} | chosen r={r} | trainable(lora)={lora_params} | delta={lora_params - p_head}")
+        print(f"[LoRA] Trainable parameters: {lora_params}")
+        print(f"[LoRA] Expected: rank=1 × (768+768) = 1536 parameters")
+        print(f"[LoRA] Parameter difference from head-only: {lora_params - head_param_budget}")
         return model, lora_params
 
     # ---------- Metrics & training ----------
