@@ -7,9 +7,9 @@ In July 1969, the Apollo 11 mission carried the first humans to the surface of t
 Original perplexity: 27.63
 
 Shuffled paragraph:
-Their achievement was watched by millions around the world and marked a new era of space exploration. Neil Armstrong and Buzz Aldrin stepped onto the lunar soil while Michael Collins orbited above in the command module. The words ‘That’s one small step for man, one giant leap for mankind’ became etched in history. In July 1969, the Apollo 11 mission carried the first humans to the surface of the Moon.
+the became mission around carried stepped watched Armstrong Moon. The of by Apollo Buzz giant lunar Collins the world new the and onto to one marked ‘That’s in Their the orbited exploration. first era Aldrin one humans In for man, mankind’ space soil for millions and the etched words was in history. leap step July 1969, while achievement 11 command small a the surface Neil Michael above module. the of
 
-Shuffled perplexity: 31.55
+Shuffled perplexity: 2307.94
 
-Difference: 3.92
-Ratio (shuffled/original): 1.14
+Difference: 2280.31
+Ratio (shuffled/original): 83.52
