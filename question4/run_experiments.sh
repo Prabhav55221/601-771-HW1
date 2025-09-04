@@ -10,7 +10,6 @@
 #SBATCH --gpus=1
 #SBATCH --partition=gpu-a100
 #SBATCH --account=a100acct
-#SBATCH --time=02:00:00
 #SBATCH --mail-user="psingh54@jhu.edu"
 
 source /home/psingh54/.bashrc
