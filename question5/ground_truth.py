@@ -20,15 +20,18 @@ def load_scifact_ground_truth() -> Dict[int, Set[int]]:
         claim_id = item['id']
         evidence_doc_ids = set()
         
-        # Extract evidence doc IDs from the evidence field
-        if 'evidence' in item and item['evidence']:
-            for evidence_group in item['evidence']:
-                if isinstance(evidence_group, dict) and 'doc_id' in evidence_group:
-                    evidence_doc_ids.add(evidence_group['doc_id'])
-                elif isinstance(evidence_group, list):
-                    for evidence_item in evidence_group:
-                        if isinstance(evidence_item, dict) and 'doc_id' in evidence_item:
-                            evidence_doc_ids.add(evidence_item['doc_id'])
+        # Use cited_doc_ids as ground truth (these are the relevant documents)
+        if 'cited_doc_ids' in item and item['cited_doc_ids']:
+            for doc_id in item['cited_doc_ids']:
+                evidence_doc_ids.add(doc_id)
+        
+        # Also include evidence_doc_id if present (specific evidence document)
+        if 'evidence_doc_id' in item and item['evidence_doc_id']:
+            try:
+                evidence_doc_id = int(item['evidence_doc_id'])
+                evidence_doc_ids.add(evidence_doc_id)
+            except (ValueError, TypeError):
+                pass  # Skip if not a valid integer
         
         if evidence_doc_ids:
             ground_truth[claim_id] = evidence_doc_ids
@@ -40,7 +43,10 @@ if __name__ == "__main__":
     gt = load_scifact_ground_truth()
     print(f"Loaded ground truth for {len(gt)} claims")
     
-    # Show sample
-    sample_claim_id = list(gt.keys())[0]
-    sample_evidence_ids = gt[sample_claim_id]
-    print(f"Sample - Claim {sample_claim_id}: Evidence docs {sample_evidence_ids}")
+    if gt:
+        # Show samples
+        sample_items = list(gt.items())[:3]
+        for claim_id, evidence_ids in sample_items:
+            print(f"Claim {claim_id}: Evidence docs {evidence_ids}")
+    else:
+        print("No ground truth loaded - check dataset structure")
